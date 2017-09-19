@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bank-utilities", "bank-utilities\bank-utilities.csproj", "{9F61188A-FA73-4A2E-96AA-5B2CFA41294D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bban-validator", "bban-validator\bban-validator.csproj", "{D70ABBA5-23E4-4FB8-8D16-981E27AE1503}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F61188A-FA73-4A2E-96AA-5B2CFA41294D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F61188A-FA73-4A2E-96AA-5B2CFA41294D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F61188A-FA73-4A2E-96AA-5B2CFA41294D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F61188A-FA73-4A2E-96AA-5B2CFA41294D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D70ABBA5-23E4-4FB8-8D16-981E27AE1503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D70ABBA5-23E4-4FB8-8D16-981E27AE1503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D70ABBA5-23E4-4FB8-8D16-981E27AE1503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D70ABBA5-23E4-4FB8-8D16-981E27AE1503}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5078F89-DC19-4FCC-90FA-5FBD713F0144}
+	EndGlobalSection
+EndGlobal
