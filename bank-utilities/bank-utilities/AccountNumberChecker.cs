@@ -139,8 +139,10 @@ namespace Ekoodi.Utilities.Checker
 
         //---------------
         // Check the last digit
+        // Input: Bank account number, length 14, no hyphen
+        // Throws InvalidAccountNumberException if check digit is not correct
         //---------------
-        private void CheckDigitCheck(string accNumber)
+        public void CheckDigitCheck(string accNumber)
         {
             int[] factors = new int[] { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2};
 
