@@ -171,7 +171,7 @@ namespace Ekoodi.Utilities.Checker
         }
 
         //---------------
-        // CheckAccountNumberFI
+        // GetLongFormatFI
         //---------------
         public string GetLongFormatFI (string accNumber)
         {
@@ -180,5 +180,17 @@ namespace Ekoodi.Utilities.Checker
             CheckDigitCheck (newNumber);
             return newNumber;
         }
+
+        //---------------
+        // GetIbanFormat
+        //---------------
+        public string GetIbanFormat(string accNumber)
+        {
+            CheckFormat(accNumber);
+            string newNumber = GenerateLongFormat(accNumber);
+            CheckDigitCheck(newNumber);
+            return newNumber;
+        }
+
     }
 }

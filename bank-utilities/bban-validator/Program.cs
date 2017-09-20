@@ -30,6 +30,8 @@ namespace bban_validator
 
                         Console.WriteLine("Finnish format: \t{0}", myAccount.FinnishFormat);
                         Console.WriteLine("Long format: \t\t{0}", myAccount.LongFormat);
+                        Console.WriteLine("IBAN: \t\t\t{0}", myAccount.IbanFormat);
+                        Console.WriteLine("Check digit OK");
                     }
                     catch (InvalidAccountNumberException e)
                     {

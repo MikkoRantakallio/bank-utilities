@@ -8,6 +8,7 @@ namespace Ekoodi.Utilities.BankAccount
         // Properties
         public string LongFormat { get; }
         public string FinnishFormat { get; }
+        public string IbanFormat { get; }
 
         // Private fields
         private long _balance;
@@ -20,6 +21,7 @@ namespace Ekoodi.Utilities.BankAccount
             // TODO check FI or long format input
 
             LongFormat = checker.GetLongFormatFI(accountNumber);
+            IbanFormat = checker.GetIbanFormat(accountNumber);
             FinnishFormat = accountNumber;
 
             _balance = 0;
