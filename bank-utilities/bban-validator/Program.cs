@@ -11,7 +11,6 @@ namespace bban_validator
             // --------
             // Ask user input, loop until "X" given
             // --------
-
             bool exit = false;
 
             do
@@ -28,9 +27,11 @@ namespace bban_validator
                     try {
                         BankAccount myAccount = new BankAccount(bankAccountInput);
 
-                        Console.WriteLine("Finnish format: \t{0}", myAccount.FinnishFormat);
-                        Console.WriteLine("Long format: \t\t{0}", myAccount.LongFormat);
-                        Console.WriteLine("IBAN: \t\t\t{0}", myAccount.IbanFormat);
+                        Console.WriteLine();
+                        Console.WriteLine("Finnish format: \t{0}", myAccount.FinnishFormatStr);
+                        Console.WriteLine("Long format: \t\t{0}", myAccount.LongFormatStr);
+                        Console.WriteLine("IBAN: \t\t\t{0}", myAccount.IbanFormatStr);
+                        Console.WriteLine("BIC: \t\t\t{0}", myAccount.BicStr);
                         Console.WriteLine("Check digit OK");
                     }
                     catch (InvalidAccountNumberException e)

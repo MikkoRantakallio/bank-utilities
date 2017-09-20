@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 namespace Ekoodi.Utilities.Checker
 {
@@ -50,52 +51,35 @@ namespace Ekoodi.Utilities.Checker
             // Check that given string is a number, hyphen included in the string
             if (hyphenPos == 6)
             {
-                // Check first part before hyphen
-                int converted;
-                string partOfString = accNumber.Substring(0, 6);
-                bool validNumber = int.TryParse(partOfString, out converted);
-
-                if (!validNumber)
-                {
-                    throw new InvalidAccountNumberException("First part is not a valid number");
-                }
-
-                // Check second part after hyphen
-                partOfString = accNumber.Substring(hyphenPos+1);
+                // Check length of second part after hyphen
+                string partOfString;
+                partOfString = accNumber.Substring(hyphenPos + 1);
 
                 // Length must be 2-8
                 if (partOfString.Length < 2 || partOfString.Length > 8)
                 {
                     throw new InvalidAccountNumberException("Length of second part is invalid");
                 }
-
-                // String part must be number
-                validNumber = int.TryParse(partOfString, out converted);
-
-                if (!validNumber)
-                {
-                    throw new InvalidAccountNumberException("Second part is not a valid number");
-                }
             }
-            else
 
-            // Hyphen not included in the string, length must be ok and also number validity
+            // Remove possible hyphen and check number validity
+            string hyphenRemoved = accNumber.Replace("-", "");
+
+            // Check length
+            if (hyphenRemoved.Length<8 || hyphenRemoved.Length > 14)
             {
-                // Check length
-                if (accNumber.Length<8 || accNumber.Length > 14)
-                {
-                    throw new InvalidAccountNumberException("Number length is invalid");
-                }
-
-                // Check number validity
-                long converted;
-                bool validNumber = long.TryParse(accNumber, out converted);
-
-                if (!validNumber)
-                {
-                    throw new InvalidAccountNumberException("Not a valid number");
-                }
+                throw new InvalidAccountNumberException("Number length is invalid");
             }
+
+            // Check number validity
+            long converted;
+            bool validNumber = long.TryParse(hyphenRemoved, out converted);
+
+            if (!validNumber)
+            {
+                throw new InvalidAccountNumberException("Not a valid number");
+            }
+//        }
         }
 
         //---------------
@@ -103,7 +87,7 @@ namespace Ekoodi.Utilities.Checker
         //---------------
         private string GenerateLongFormat(string accNumber)
         {
-            string[] groupA = new string[] { "1", "2", "31", "33", "34", "36", "37", "38", "39", "6", "8" };
+            string[] groupA = new string[] { "1", "2", "3", "6", "7", "8" };
             string[] groupB = new string[] { "4", "5" };
 
             // Remove hyphen, if it exists
@@ -113,7 +97,7 @@ namespace Ekoodi.Utilities.Checker
             }
 
             // Check which method to use when filling zeros
-            if (Array.IndexOf(groupA, accNumber.Substring(0,1))!=-1 || Array.IndexOf(groupA, accNumber.Substring(0, 2)) != -1)
+            if (Array.IndexOf(groupA, accNumber.Substring(0,1))!=-1)
             {
                 string firstPart = accNumber.Substring(0, 6);
                 string secondPart = accNumber.Substring(6);
@@ -140,7 +124,7 @@ namespace Ekoodi.Utilities.Checker
         //---------------
         // Check the last digit
         //---------------
-        private void CheckDigitCheck(string accNumber)
+        private void LastDigitCheck(string accNumber)
         {
             int[] factors = new int[] { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2};
 
@@ -171,25 +155,50 @@ namespace Ekoodi.Utilities.Checker
         }
 
         //---------------
-        // GetLongFormatFI
+        // Generate IBAN account number
         //---------------
-        public string GetLongFormatFI (string accNumber)
+        private string GenerateIbanFormat(string accNumber)
+        {
+            int checkNumber =98;
+            BigInteger mod;
+
+            // Generate check number
+            // Loop and try to get mod 1 from the calculation
+            do
+            {
+                checkNumber--;
+
+                // Create the number first in string ("1518" = "FI")
+                string tryThisNumber = accNumber + "1518" + checkNumber.ToString("00");
+                BigInteger theBigNumber = BigInteger.Parse(tryThisNumber);
+                mod = theBigNumber % 97;
+
+            } while (mod != 1 && checkNumber >=0);
+
+            return "FI"+ checkNumber.ToString("00 ") + accNumber.Substring(0,4) + " " + accNumber.Substring(4,4)
+                + " " + accNumber.Substring(8,4)+ " " + accNumber.Substring(12);
+        }
+
+        //---------------
+        // GetLongFormat
+        //---------------
+        public string GetLongFormat (string accNumber)
         {
             CheckFormat(accNumber);
             string newNumber = GenerateLongFormat(accNumber);
-            CheckDigitCheck (newNumber);
+            LastDigitCheck (newNumber);
             return newNumber;
         }
 
         //---------------
-        // GetIbanFormat
+        // Get Iban format
         //---------------
         public string GetIbanFormat(string accNumber)
         {
-            CheckFormat(accNumber);
-            string newNumber = GenerateLongFormat(accNumber);
-            CheckDigitCheck(newNumber);
-            return newNumber;
+            string newNumber = GetLongFormat(accNumber);
+            string ibanStr = GenerateIbanFormat(newNumber);
+
+            return ibanStr;
         }
 
     }

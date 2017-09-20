@@ -1,30 +1,46 @@
 ﻿using System;
 using Ekoodi.Utilities.Checker;
+using Ekoodi.Utilities.Bic;
 
 namespace Ekoodi.Utilities.BankAccount
 {
     public class BankAccount
     {
         // Properties
-        public string LongFormat { get; }
-        public string FinnishFormat { get; }
-        public string IbanFormat { get; }
+        public string LongFormatStr { get; }
+        public string FinnishFormatStr { get; }
+        public string IbanFormatStr { get; }
+        public string BicStr { get; }
 
         // Private fields
-        private long _balance;
+        private float _balance;
 
         // Constructor
         public BankAccount(string accountNumber)
         {
             AccountNumberChecker checker = new AccountNumberChecker();
+            BicCode bic = new BicCode();
 
             // TODO check FI or long format input
 
-            LongFormat = checker.GetLongFormatFI(accountNumber);
-            IbanFormat = checker.GetIbanFormat(accountNumber);
-            FinnishFormat = accountNumber;
+            LongFormatStr = checker.GetLongFormat(accountNumber);
+            IbanFormatStr = checker.GetIbanFormat(accountNumber);
+            BicStr = bic.GetBicCode(IbanFormatStr);
+            FinnishFormatStr = accountNumber;
 
             _balance = 0;
+        }
+
+        // Deposit
+        public void Deposit (float depositAmount)
+        {
+            _balance += depositAmount;
+        }
+
+        // Withdrawal
+        public void WithDrawal(float withDrawalAmount)
+        {
+            _balance -= withDrawalAmount;
         }
     }
 }
