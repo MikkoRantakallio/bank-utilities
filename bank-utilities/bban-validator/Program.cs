@@ -1,6 +1,5 @@
 ﻿using System;
-using Ekoodi.Utilities.BankAccount;
-using Ekoodi.Utilities.Checker;
+using Ekoodi.Utilities.Bank;
 
 namespace bban_validator
 {

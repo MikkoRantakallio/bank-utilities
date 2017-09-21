@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Ekoodi.Utilities.Bank;
 
 namespace reference_number_app
 {
@@ -10,32 +11,28 @@ namespace reference_number_app
             // -------------------
             // Get long value from user
             // -------------------
-            long getLongValue(string msg, string exitStr, out bool success)
+            string getBigIntValue(string msg, string exitStr, out bool success)
             {
                 bool validNumber;
-                long converted;
+                BigInteger converted;
+                string inputStr;
                 success = true;
 
                 // Loop until valid number given or input is equal to exit value
                 do
                 {
                     Console.Write("{0}: ", msg);
-                    string inputStr = Console.ReadLine();
+                    inputStr = Console.ReadLine();
 
                     if (inputStr.ToUpper() == exitStr)
                     {
                         success = false;
-                        return 0;
+                        return "";
                     }
+                    validNumber = BigInteger.TryParse(inputStr, out converted);
 
-                    validNumber = long.TryParse(inputStr, out converted);
-
-                    if (!validNumber)
-                    {
-                        validNumber = false;
-                    }
                 } while (!validNumber);
-                return converted;
+                return inputStr;
             }
 
             // --------
@@ -61,34 +58,32 @@ namespace reference_number_app
                     switch (menuChoice)
                     {
                         case "1":
-                            long refNumber = getLongValue("Enter reference number (X=Back): ", "X", out valid);
-                            break;
-                        case "2":
-                            long basePart = getLongValue("Enter basepart (X=Back): ", "X", out valid);
+                            string refNumber = getBigIntValue("Enter reference number (X=Back): ", "X", out valid);
+                            Console.WriteLine();
                             if (valid)
                             {
-                                long refNumberCount = getLongValue("Enter count (X=Back): ", "X", out valid);
+                                // Try to construct a reference number object with given value
+                                try
+                                {
+                                    ReferenceNum refNum = new ReferenceNum(refNumber);
+                                    Console.WriteLine(refNum.RefNumber);
+                                }
+                                catch (InvalidRefNumberException e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                }
+                            }
+                            break;
+                        case "2":
+                            string basePart = getBigIntValue("Enter basepart (X=Back): ", "X", out valid);
+                            if (valid)
+                            {
+                                string refNumberCount = getBigIntValue("Enter count (X=Back): ", "X", out valid);
                             }
                             break;
                         default:
                             break;
                     }
-                    // Check reference number
-/*                    try
-                    {
-                        BankAccount myAccount = new BankAccount(bankAccountInput);
-
-                        Console.WriteLine();
-                        Console.WriteLine("Finnish format: \t{0}", myAccount.FinnishFormatStr);
-                        Console.WriteLine("Long format: \t\t{0}", myAccount.LongFormatStr);
-                        Console.WriteLine("IBAN: \t\t\t{0}", myAccount.IbanFormatStr);
-                        Console.WriteLine("BIC: \t\t\t{0}", myAccount.BicStr);
-                        Console.WriteLine("Check digit OK");
-                    }
-                    catch (InvalidAccountNumberException e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }*/
                     Console.WriteLine();
                 }
             } while (!exitMain);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Ekoodi.Utilities.Bic
+namespace Ekoodi.Utilities.Bank
 {
     class BicCode
     {

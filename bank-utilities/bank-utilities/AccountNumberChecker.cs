@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-namespace Ekoodi.Utilities.Checker
+namespace Ekoodi.Utilities.Bank
 {
     //---------
     // New exception for account number check

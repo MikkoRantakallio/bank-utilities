@@ -1,8 +1,6 @@
 ﻿using System;
-using Ekoodi.Utilities.Checker;
-using Ekoodi.Utilities.Bic;
 
-namespace Ekoodi.Utilities.BankAccount
+namespace Ekoodi.Utilities.Bank
 {
     public class BankAccount
     {
