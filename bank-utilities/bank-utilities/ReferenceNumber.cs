@@ -46,12 +46,35 @@ namespace Ekoodi.Utilities.Bank
         {
             _basePart = refNum.Substring(0, refNum.Length - 1);
             CheckRefNum(refNum);
-            RefNumber = refNum;
+            RefNumber = FormatRefNumber(refNum);
         }
 
         //---------
         // Methods
         //---------
+
+        // Format reference number
+        private string FormatRefNumber(string refNum)
+        {
+            string finalString="";
+            if (refNum.Length > 5)
+            {
+                int startPos = refNum.Length;
+                do
+                {
+                    startPos -= 5;
+                    finalString = " " + refNum.Substring(startPos, 5) + finalString;
+
+                } while (startPos > 5);
+
+                finalString = refNum.Substring(0, startPos) + finalString;
+                return finalString;
+            }
+            else
+            {
+                return refNum;
+            }
+        }
 
         // Generate reference number based on base part
         public string GenerateRefNumber(string basePart)
@@ -63,7 +86,7 @@ namespace Ekoodi.Utilities.Bank
             else
             {
                 string checkDigit = CalculateCheckDigit(basePart);
-                return basePart + checkDigit;
+                return FormatRefNumber(basePart + checkDigit);
             }
         }
 
