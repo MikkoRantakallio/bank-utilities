@@ -21,7 +21,7 @@ namespace reference_number_app
                 // Loop until valid number given or input is equal to exit value
                 do
                 {
-                    Console.Write("{0}: ", msg);
+                    Console.Write("{0} ", msg);
                     inputStr = Console.ReadLine();
 
                     if (inputStr.ToUpper() == exitStr)
@@ -83,13 +83,15 @@ namespace reference_number_app
                                 {
                                     int counter = int.Parse(refNumberCount);
                                     ReferenceNumber refNum = new ReferenceNumber();
+                                    Console.WriteLine();
+                                    Console.WriteLine("Generated reference numbers:");
 
                                     for (int i = 1; i <= counter; i++)
                                     {
                                         try
                                         {
                                             string refNumStr = refNum.GenerateRefNumber(basePart + i.ToString());
-                                            Console.WriteLine(refNumStr);
+                                            Console.WriteLine("{0}. {1}", i.ToString(), refNumStr);
                                         }
                                         catch (InvalidRefNumberException e)
                                         {
