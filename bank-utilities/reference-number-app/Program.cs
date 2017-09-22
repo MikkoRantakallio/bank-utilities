@@ -58,19 +58,19 @@ namespace reference_number_app
                     switch (menuChoice)
                     {
                         case "1":
-                            string refNumber = getBigIntValue("Enter reference number (X=Back): ", "X", out valid);
+                            string refNumberInput = getBigIntValue("Enter reference number (X=Back): ", "X", out valid);
                             Console.WriteLine();
                             if (valid)
                             {
                                 // Try to construct a reference number object with given value
                                 try
                                 {
-                                    ReferenceNum refNum = new ReferenceNum(refNumber);
-                                    Console.WriteLine(refNum.RefNumber);
+                                    ReferenceNumber refNum = new ReferenceNumber(refNumberInput);
+                                    Console.WriteLine("{0} - OK", refNum.RefNumber);
                                 }
                                 catch (InvalidRefNumberException e)
                                 {
-                                    Console.WriteLine(e.Message);
+                                    Console.WriteLine( "{0} - {1}", refNumberInput, e.Message);
                                 }
                             }
                             break;
@@ -79,6 +79,24 @@ namespace reference_number_app
                             if (valid)
                             {
                                 string refNumberCount = getBigIntValue("Enter count (X=Back): ", "X", out valid);
+                                if (valid)
+                                {
+                                    int counter = int.Parse(refNumberCount);
+                                    ReferenceNumber refNum = new ReferenceNumber();
+
+                                    for (int i = 1; i <= counter; i++)
+                                    {
+                                        try
+                                        {
+                                            string refNumStr = refNum.GenerateRefNumber(basePart + i.ToString());
+                                            Console.WriteLine(refNumStr);
+                                        }
+                                        catch (InvalidRefNumberException e)
+                                        {
+                                            Console.WriteLine(e.Message);
+                                        }
+                                    }
+                                }
                             }
                             break;
                         default:

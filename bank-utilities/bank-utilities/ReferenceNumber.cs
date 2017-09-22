@@ -24,9 +24,9 @@ namespace Ekoodi.Utilities.Bank
     }
 
     //---------
-    // ReferenceNum class
+    // ReferenceNumber class
     //---------
-    public class ReferenceNum
+    public class ReferenceNumber
     {
         // Properties
         public string RefNumber { get; }
@@ -34,46 +34,54 @@ namespace Ekoodi.Utilities.Bank
         // Private fields
         private string _basePart;
 
-        // Constructors
-        public ReferenceNum()
+        // Default constructor
+        public ReferenceNumber()
         {
-
+            _basePart = "";
+            RefNumber = "";
         }
 
-        public ReferenceNum(string refNum)
+        // Constructor with refNumber
+        public ReferenceNumber(string refNum)
         {
             _basePart = refNum.Substring(0, refNum.Length - 1);
             CheckRefNum(refNum);
             RefNumber = refNum;
         }
 
+        //---------
         // Methods
-        public string NextRefNumber()
-        {
-            return "FF";
-        }
+        //---------
 
-        public void SetBasePart(string basePart)
+        // Generate reference number based on base part
+        public string GenerateRefNumber(string basePart)
         {
-            _basePart = basePart;
-        }
-
-        // Reference number check
-        private void CheckRefNum(string refNum)
-        {
-            int sum=0;
-            int[] factors = new int[] { 7, 3, 1 };
-            int factorInd = 0;
-
-            // Calculate the check digit
-            for (int i=_basePart.Length-1; i>=0; i--)
+            if (basePart == "" || basePart.Length<4 || basePart.Length >19)
             {
-                int x = int.Parse(_basePart.Substring(i, 1));
-                sum = sum + x * factors[factorInd];
-                factorInd++;
+                throw new InvalidRefNumberException("Base part is missing or invalid length");
+            }
+            else
+            {
+                string checkDigit = CalculateCheckDigit(basePart);
+                return basePart + checkDigit;
+            }
+        }
 
-                if (factorInd > 2)
-                    factorInd = 0;
+        // Calculate Check digit
+        private string CalculateCheckDigit(string basePart)
+        {
+            int[] factors = new int[] { 7, 3, 1 };
+            int factorIndex = 0;
+            int sum = 0;
+
+            for (int i = basePart.Length - 1; i >= 0; i--)
+            {
+                int x = int.Parse(basePart.Substring(i, 1));
+                sum = sum + x * factors[factorIndex];
+                factorIndex++;
+
+                if (factorIndex > 2)
+                    factorIndex = 0;
             }
 
             // Calculate next ten
@@ -82,8 +90,16 @@ namespace Ekoodi.Utilities.Bank
             if (checkDigit == 10)
                 checkDigit = 0;
 
-            // Throw exception in the numbers does not match
-            if (checkDigit.ToString() != refNum.Substring(refNum.Length - 1, 1)){
+            return checkDigit.ToString();
+        }
+
+        // Reference number check
+        private void CheckRefNum(string refNum)
+        {
+            string checkDigit = CalculateCheckDigit(_basePart);
+
+            // Throw exception if the numbers does not match
+            if (checkDigit != refNum.Substring(refNum.Length - 1, 1)){
                 throw new InvalidRefNumberException("Invalid check digit");
             }
         }
