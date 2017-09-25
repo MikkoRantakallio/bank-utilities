@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bban-validator", "bban-vali
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reference-number-app", "reference-number-app\reference-number-app.csproj", "{C338B31E-0FCC-437E-BA34-9FE06DA98848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "int-reference-number-app", "int-reference-number-app\int-reference-number-app.csproj", "{DDEDAEF1-375E-4352-8241-D520D3A4F96A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "int-reference-number-app", "int-reference-number-app\int-reference-number-app.csproj", "{DDEDAEF1-375E-4352-8241-D520D3A4F96A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "virtual-bar-code", "virtual-bar-core\virtual-bar-code.csproj", "{1C446A49-CBD8-4941-AC31-791EA7F78921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DDEDAEF1-375E-4352-8241-D520D3A4F96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDEDAEF1-375E-4352-8241-D520D3A4F96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDEDAEF1-375E-4352-8241-D520D3A4F96A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C446A49-CBD8-4941-AC31-791EA7F78921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C446A49-CBD8-4941-AC31-791EA7F78921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C446A49-CBD8-4941-AC31-791EA7F78921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C446A49-CBD8-4941-AC31-791EA7F78921}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

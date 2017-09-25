@@ -19,7 +19,12 @@ namespace Ekoodi.Utilities.Bank
             AccountNumberChecker checker = new AccountNumberChecker();
             BicCodeReader bicList = new BicCodeReader();
 
-            // TODO check FI or long format input
+            // Check if FI or long format input
+
+            if (accountNumber.Substring(0,2).ToUpper() == "FI")
+            {
+                accountNumber = accountNumber.Substring(4);
+            }
 
             LongFormatStr = checker.GetLongFormat(accountNumber);
             IbanFormatStr = checker.GetIbanFormat(accountNumber);
