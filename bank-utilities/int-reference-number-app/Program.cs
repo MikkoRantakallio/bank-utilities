@@ -2,7 +2,7 @@
 using System.Numerics;
 using Ekoodi.Utilities.Bank;
 
-namespace reference_number_app
+namespace int_reference_number_app
 {
     class Program
     {
@@ -11,7 +11,7 @@ namespace reference_number_app
             // -------------------
             // Get long value from user
             // -------------------
-            string getBigIntValue(string msg, string exitStr, out bool success)
+            string getBigIntValue(string msg, string exitStr, int checkFromIndex, out bool success)
             {
                 bool validNumber;
                 BigInteger converted;
@@ -29,7 +29,7 @@ namespace reference_number_app
                         success = false;
                         return "";
                     }
-                    validNumber = BigInteger.TryParse(inputStr, out converted);
+                    validNumber = BigInteger.TryParse(inputStr.Substring(checkFromIndex), out converted);
 
                 } while (!validNumber);
                 return inputStr;
@@ -38,13 +38,14 @@ namespace reference_number_app
             // --------
             // Show "menu", ask user input, loop until "X" given
             // --------
+
             bool exitMain = false;
             bool valid;
 
             do
             {
-                Console.WriteLine("1 = Check reference number");
-                Console.WriteLine("2 = Create reference number(s)");
+                Console.WriteLine("1 = Check international reference number");
+                Console.WriteLine("2 = Create international reference number(s)");
                 Console.WriteLine("X = Exit");
                 Console.Write("Select: ");
 
@@ -58,46 +59,37 @@ namespace reference_number_app
                     switch (menuChoice)
                     {
                         case "1":
-                            string refNumberInput = getBigIntValue("Enter reference number (X=Back): ", "X", out valid);
+                            string intRefNumberInput = getBigIntValue("Enter international reference number (X=Back): ", "X", 2, out valid);
                             Console.WriteLine();
                             if (valid)
                             {
-                                // Try to construct a reference number object with given value
+                                // Try to construct an international reference number object with given value
                                 try
                                 {
-                                    ReferenceNumber refNum = new ReferenceNumber(refNumberInput);
-                                    Console.WriteLine("{0} - OK", refNum.RefNumberFI);
+                                    IntReferenceNumber refNumInt = new IntReferenceNumber(intRefNumberInput);
+                                    Console.WriteLine("{0} - OK", refNumInt.RefNumberINT.ToUpper());
                                 }
                                 catch (InvalidRefNumberException e)
                                 {
-                                    Console.WriteLine( "{0} - {1}", refNumberInput, e.Message);
+                                    Console.WriteLine("{0} - {1}", intRefNumberInput.ToUpper(), e.Message);
                                 }
                             }
                             break;
                         case "2":
-                            string basePart = getBigIntValue("Enter basepart (X=Back): ", "X", out valid);
+                            string basePartFI = getBigIntValue("Enter finnish reference number (X=Back): ", "X", 0, out valid);
+                            Console.WriteLine();
                             if (valid)
                             {
-                                string refNumberCount = getBigIntValue("Enter count (X=Back): ", "X", out valid);
-                                if (valid)
+                                IntReferenceNumber refNumInt = new IntReferenceNumber();
+                                try
                                 {
-                                    int counter = int.Parse(refNumberCount);
-                                    ReferenceNumber refNum = new ReferenceNumber();
-                                    Console.WriteLine();
-                                    Console.WriteLine("Generated reference numbers:");
-
-                                    for (int i = 1; i <= counter; i++)
-                                    {
-                                        try
-                                        {
-                                            string refNumStr = refNum.GenerateRefNumber(basePart + i.ToString());
-                                            Console.WriteLine("{0}. {1}", i.ToString(), refNumStr);
-                                        }
-                                        catch (InvalidRefNumberException e)
-                                        {
-                                            Console.WriteLine(e.Message);
-                                        }
-                                    }
+                                    refNumInt.CheckFinnishPart(basePartFI);
+                                    string intRefNumStr = refNumInt.GenerateIntRefNumber();
+                                    Console.WriteLine("{0}", intRefNumStr);
+                                }
+                                catch (InvalidRefNumberException e)
+                                {
+                                    Console.WriteLine(e.Message);
                                 }
                             }
                             break;
@@ -110,4 +102,3 @@ namespace reference_number_app
         }
     }
 }
-

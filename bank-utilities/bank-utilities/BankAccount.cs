@@ -17,13 +17,13 @@ namespace Ekoodi.Utilities.Bank
         public BankAccount(string accountNumber)
         {
             AccountNumberChecker checker = new AccountNumberChecker();
-            BicCode bic = new BicCode();
+            BicCodeReader bicList = new BicCodeReader();
 
             // TODO check FI or long format input
 
             LongFormatStr = checker.GetLongFormat(accountNumber);
             IbanFormatStr = checker.GetIbanFormat(accountNumber);
-            BicStr = bic.GetBicCode(IbanFormatStr);
+            BicStr = bicList.GetBicCode(IbanFormatStr);
             FinnishFormatStr = accountNumber;
 
             _balance = 0;

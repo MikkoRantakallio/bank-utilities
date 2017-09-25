@@ -28,25 +28,29 @@ namespace Ekoodi.Utilities.Bank
     //---------
     public class ReferenceNumber
     {
+        //-------
         // Properties
-        public string RefNumber { get; }
+        //-------
+        public string RefNumberFI { get; set; }
+        public string BasePartFI { get; set; }
 
-        // Private fields
-        private string _basePart;
+        //-------
+        // Constructors
+        //-------
 
-        // Default constructor
+        // Default
         public ReferenceNumber()
         {
-            _basePart = "";
-            RefNumber = "";
+            BasePartFI = "";
+            RefNumberFI = "";
         }
 
         // Constructor with refNumber
         public ReferenceNumber(string refNum)
         {
-            _basePart = refNum.Substring(0, refNum.Length - 1);
             CheckRefNum(refNum);
-            RefNumber = FormatRefNumber(refNum);
+            BasePartFI = refNum.Substring(0, refNum.Length - 1);
+            RefNumberFI = FormatRefNumber(refNum);
         }
 
         //---------
@@ -117,13 +121,14 @@ namespace Ekoodi.Utilities.Bank
         }
 
         // Reference number check
-        private void CheckRefNum(string refNum)
+        public void CheckRefNum(string refNum)
         {
-            string checkDigit = CalculateCheckDigit(_basePart);
+            string basePartFI = refNum.Substring(0, refNum.Length - 1);
+            string checkDigit = CalculateCheckDigit(basePartFI);
 
             // Throw exception if the numbers does not match
             if (checkDigit != refNum.Substring(refNum.Length - 1, 1)){
-                throw new InvalidRefNumberException("Invalid check digit");
+                throw new InvalidRefNumberException("Invalid finnish check digit");
             }
         }
     }
