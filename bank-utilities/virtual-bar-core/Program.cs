@@ -11,7 +11,7 @@ namespace virtual_bar_code_app
             // -------------------
             // Get long value from user
             // -------------------
-            string getBigIntValue(string msg, string exitStr, int checkFromIndex, out bool success)
+            string getRefNumber(string msg, string exitStr, out bool success)
             {
                 bool validNumber;
                 BigInteger converted;
@@ -29,10 +29,19 @@ namespace virtual_bar_code_app
                         success = false;
                         return "";
                     }
-                    validNumber = BigInteger.TryParse(inputStr.Substring(checkFromIndex), out converted);
+
+                    // If RF-style reference number, parse starting from index 2
+                    if (inputStr.Substring(0, 2).ToUpper() == "RF")
+                    {
+                        validNumber = BigInteger.TryParse(inputStr.Substring(2), out converted);
+                    }
+                    else
+                    {
+                        validNumber = BigInteger.TryParse(inputStr, out converted);
+                    }
 
                 } while (!validNumber);
-                return inputStr;
+                return inputStr.ToUpper();
             }
 
             // -------------------
@@ -115,18 +124,23 @@ namespace virtual_bar_code_app
 
             do
             {
+                string bankAccountInput, refNumberInput, amountInput, dueDateInput;
+
                 // Ask user values for creating virtual bar code
-                // IBAN number
+                // IBAN number, loop until valid value or exit
                 do
                 {
-                    string bankAccountInput = getBigIntValue("Enter Finnish IBAN bank account number (X=Exit): ", "X", 2, out valid);
+                    Console.Write("Enter Finnish IBAN bank account number (X=Exit): ");
+                    bankAccountInput = Console.ReadLine();
 
-                    if (!valid)
+                    if (bankAccountInput.ToUpper() == "X")
                         return;
 
                     try
                     {
                         BankAccount myAccount = new BankAccount(bankAccountInput);
+                        valid = true;
+                        bankAccountInput = myAccount.IbanFormatStr.Replace(" ","");
                     }
                     catch (InvalidAccountNumberException e)
                     {
@@ -135,33 +149,56 @@ namespace virtual_bar_code_app
                     }
                 } while (!valid);
 
-                // Reference number
-                string refNumberInput = getBigIntValue("Enter reference number (X=Exit): ", "X", 0, out valid);
+                // Reference number, loop until valid value or exit
 
-                if (!valid)
-                    return;
+                do
+                {
+                    refNumberInput = getRefNumber("Enter reference number (X=Exit): ", "X", out valid);
 
-                try
-                {
-                    ReferenceNumber myAccount = new ReferenceNumber(refNumberInput);
-                }
-                catch (InvalidRefNumberException e)
-                {
-                    Console.WriteLine(e.Message);
-                    return;
-                }
+                    if (!valid)
+                        return;
+
+                    try
+                    {
+                        // Depending on input type, construct correct object
+                        if (refNumberInput.Substring(0,2) == "RF")
+                        {
+                            IntReferenceNumber myRefNumber = new IntReferenceNumber(refNumberInput);
+                        }
+                        else
+                        {
+                            ReferenceNumber myRefNumber = new ReferenceNumber(refNumberInput);
+                        }
+                    }
+                    catch (InvalidRefNumberException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        valid = false;
+                    }
+                } while (!valid);
 
                 // Amount
-                string amountInput = getDoubleValue("Enter amount (X=Exit): ", "X", out valid, 0, 999999.99);
+                amountInput = getDoubleValue("Enter amount (X=Exit): ", "X", out valid, 0, 999999.99);
 
                 if (!valid)
                     return;
 
                 // Due date
-                string dueDateInput = getDateValue("Enter due date (PP.KK.VVVV): ", "X", out valid);
+                dueDateInput = getDateValue("Enter due date (PP.KK.VVVV): ", "X", out valid);
 
                 if (!valid)
                     return;
+
+                // Try to create virtual bar code based on user input
+                try
+                {
+                    VirtualBarCode virtBarCode = new VirtualBarCode(bankAccountInput, refNumberInput, amountInput, dueDateInput);
+                    Console.WriteLine();
+                    Console.WriteLine("Virtual barcode is: {0}", virtBarCode.virtualBarCodeStr);
+                }
+                catch (InvalidVirtualBarCodeException e)
+                {
+                }
 
             } while (!exitMain);
         }
