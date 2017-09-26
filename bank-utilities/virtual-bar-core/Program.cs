@@ -67,9 +67,28 @@ namespace virtual_bar_code_app
                     }
                     validNumber = double.TryParse(inputStr, out converted);
 
-                    if (converted<lowLimit || converted > highLimit)
+                    // Zero allowed
+                    if (converted == 0)
                     {
-                        Console.WriteLine("Value out of limits {0}-{1}", lowLimit, highLimit);
+                        return "0,00";
+                    }
+
+                    // Too big value, return "00000000"
+                    if (converted > highLimit)
+                    {
+                        return "00000000";
+                    }
+
+                    if (inputStr.Substring(inputStr.IndexOf(",") + 1).Length > 2)
+                    {
+                        Console.WriteLine("Too many decimals");
+                        validNumber = false;
+                    }
+
+                    // Negatives not allowed
+                    if (converted<lowLimit)
+                    {
+                        Console.WriteLine("Value cannot be negative");
                         validNumber = false;
                     }
 
@@ -88,6 +107,7 @@ namespace virtual_bar_code_app
                 int year, month, day;
 
                 // Loop until valid date given or input is equal to exit value
+                // Empty date is allowed
                 do
                 {
                     Console.Write("{0} ", msg);
@@ -98,12 +118,19 @@ namespace virtual_bar_code_app
                         success = false;
                         return "";
                     }
-                    success = int.TryParse(inputStr.Substring(6,4), out year);
-                    success = int.TryParse(inputStr.Substring(3,2), out month);
-                    success = int.TryParse(inputStr.Substring(0,2), out day);
+
+                    if (inputStr.Length == 0)
+                    {
+                        success = true;
+                        return "00.00.0000";
+                    }
 
                     try
                     {
+                        success = int.TryParse(inputStr.Substring(6, 4), out year);
+                        success = int.TryParse(inputStr.Substring(3, 2), out month);
+                        success = int.TryParse(inputStr.Substring(0, 2), out day);
+                        
                         dateValue = new DateTime(year, month, day);
                     }
                     catch (ArgumentOutOfRangeException)
@@ -124,7 +151,7 @@ namespace virtual_bar_code_app
 
             do
             {
-                string bankAccountInput, refNumberInput, amountInput, dueDateInput;
+                string bankAccountInput, refNumberInput, dueDateInput, amountInput;
 
                 // Ask user values for creating virtual bar code
                 // IBAN number, loop until valid value or exit
@@ -195,6 +222,7 @@ namespace virtual_bar_code_app
                     VirtualBarCode virtBarCode = new VirtualBarCode(bankAccountInput, refNumberInput, amountInput, dueDateInput);
                     Console.WriteLine();
                     Console.WriteLine("Virtual barcode is: {0}", virtBarCode.virtualBarCodeStr);
+                    Console.WriteLine();
                 }
                 catch (InvalidVirtualBarCodeException e)
                 {
